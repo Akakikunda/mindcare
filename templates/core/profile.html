@@ -1,0 +1,391 @@
+<!--restore page
+ core/templates/base.html -->
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}MindCare{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">MindCare</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+                   
+
+
+                  <a href="{% url 'crisis_support' %}" class="btn btn-danger">Need Help Now</a>
+                  <li><a href="{% url 'take_assessment' %}">Assessment</a></li>
+                  <li><a href="{% url 'my_assessments' %}">Results</a></li>
+                  <li><a href="{% url 'resources' %}">Resources</a></li>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>-->
+
+<!--REGISTRATION-->
+<!--{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Register</h2>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Register</button>
+  </form>
+  <p class="mt-3">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+</div>
+{% endblock %}-->
+
+<!--LOGIN-->
+<!-- templates/registration/login.html -->
+<!--{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<h2 class="mb-4">Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Login</button>
+</form>
+<p class="mt-3"><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+{% endblock %}-->
+
+
+<!---THERAPIST DASHBOARD-->
+!--{% extends 'base.html' %}
+
+{% block title %}Therapist Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Welcome, {{ user.first_name }}!</h2>
+
+    <!- Appointments -->
+    <!--<div class="card mb-4">
+        <div class="card-header bg-info text-white">Upcoming Appointments</div>
+        <ul class="list-group list-group-flush">
+            {% for appointment in appointments %}
+                <li class="list-group-item">
+                    With: {{ appointment.client.get_full_name }} on {{ appointment.date }} at {{ appointment.time }}
+                </li>
+            {% empty %}
+                <li class="list-group-item">No appointments.</li>
+            {% endfor %}
+        </ul>
+    </div>-->
+
+    <!-- Messages -->
+   <!---<div class="card mb-4">
+        <div class="card-header bg-warning text-dark">Messages</div>
+        <ul class="list-group list-group-flush">
+            {% for message in messages %}
+                <li class="list-group-item">
+                    From {{ message.sender.username }}: {{ message.content }}
+                </li>
+            {% empty %}
+                <li class="list-group-item">No messages.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <! Resources -->
+    <!--<div class="card">
+        <div class="card-header bg-success text-white">Uploaded Resources</div>
+        <ul class="list-group list-group-flush">
+            {% for resource in resources %}
+                <li class="list-group-item">
+                    <a href="{{ resource.file.url }}">{{ resource.title }}</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No resources uploaded.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}-->
+
+
+
+
+<!--PATIENT PROFILE-->
+<!--{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>👤 Patient Profile</h2>
+  <ul class="list-group mt-3">
+    <li class="list-group-item"><strong>Username:</strong> {{ user.username }}</li>
+    <li class="list-group-item"><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</li>
+    <li class="list-group-item"><strong>Email:</strong> {{ user.email }}</li>
+    <li class="list-group-item"><strong>Role:</strong> {{ user.role }}</li>
+
+
+    <a href="{% url 'edit_profile' %}" class="btn btn-secondary mt-3">Edit Profile</a>
+
+  </ul>
+</div>
+{% endblock %}-->
+
+<!--home-->
+
+<!--{% extends 'base.html' %}
+
+{% block title %}Welcome to MindCare{% endblock %}
+
+{% block content %}
+  <div class="text-center">
+    <h1 class="display-4">Welcome to MindCare</h1>
+    <p class="lead">Your mental wellness companion.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'register' %}">Get Started</a>
+  </div>
+{% endblock %}-->
+
+
+<!--RESOURCES-->
+<!--
+{% extends 'base.html' %}
+{% block content %}
+<h2>Resources</h2>
+<ul>
+  {% for r in resources %}
+    <li>
+      <h4>{{ r.title }}</h4>
+      <p>{{ r.description }}</p>
+      {% if r.link %}
+        <a href="{{ r.link }}" target="_blank" class="btn btn-outline-info">Open Link</a>
+      {% endif %}
+      {% if r.file %}
+        <a href="{{ r.file.url }}" download class="btn btn-outline-success">Download</a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}
+
+-->
+
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from .views import register_view
+from .views import profile_view
+from .views import home_view
+from .views import book_appointment, appointment_success
+from .views import take_assessment, my_assessments
+from .views import view_resources
+from .views import therapist_directory
+from .views import send_message, inbox
+from .views import crisis_support
+from django.urls import path
+from .views import patient_profile
+from . import views
+from .views import therapist_dashboard
+from django.contrib.auth.views import LoginView
+from .views import edit_profile
+from django.conf import settings
+from django.conf.urls.static import static
+from .views import admin_dashboard  
+from .views import dashboard  
+from .views import book_appointment, update_appointment_status
+
+
+urlpatterns = [
+    path('register/', register_view, name='register'),
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('profile/', profile_view, name='profile'),
+    path('', home_view, name='home'),  # This fixes your 404
+    path('book/success/', appointment_success, name='appointment_success'),
+    path('assessments/take/', take_assessment, name='take_assessment'),
+    path('assessments/results/', my_assessments, name='my_assessments'),
+    path('resources/', view_resources, name='resources'),
+    path('therapists/', therapist_directory, name='therapist_directory'),
+    path('message/send/', send_message, name='send_message'),
+    path('message/inbox/', inbox, name='inbox'),
+    path('crisis/', crisis_support, name='crisis_support'),
+    path('admin-dashboard/', admin_dashboard, name='admin_dashboard'),
+    path('therapist/dashboard/', views.therapist_dashboard, name='therapist_dashboard'),
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('patient/profile/', patient_profile, name='patient_profile'),
+    path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('profile/edit/', edit_profile, name='edit_profile'),
+    path('admin/users/', views.manage_users, name='manage_users'),
+    path('admin/users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('login/', views.custom_login_view, name='login'),
+    path('resources/', views.view_resources, name='view_resources'),
+    path('book/', views.book_appointment, name='book_appointment'),
+    path('book/', book_appointment, name='book_appointment'),
+    path('resources/', views.view_resources, name='view_resources'),
+    path('therapist/<int:therapist_id>/', views.therapist_profile_view, name='therapist_profile'),
+    path('assessment/individual/', views.individual_assessment, name='individual_assessment'),
+    path('assessment/couple/', views.couple_assessment, name='couple_assessment'),
+    path('assessment/family/', views.family_assessment, name='family_assessment'),
+    path('assessment/teen/', views.teen_assessment, name='teen_assessment'),
+    path('appointment/<int:appointment_id>/<str:status>/', update_appointment_status, name='update_appointment_status'),
+    path('dashboard/', dashboard, name='dashboard'),  
+
+
+
+    # Password reset
+    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
+    path('therapist/dashboard/', therapist_dashboard, name='therapist_dashboard'),
+
+ ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+
+<!--model.py-->
+#from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.contrib.auth.models import User  
+from django.conf import settings
+from django.contrib.auth import get_user_model
+
+
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('therapist', 'Therapist'),
+        ('client', 'Client'),
+    )
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='client') 
+    specialty = models.CharField(max_length=100, blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True, null=True)
+    bio = models.TextField(blank=True, null=True)
+    
+    # ✅ Add this:
+    image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
+
+
+#class Appointment(models.Model):
+    #therapist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='appointments_as_therapist')
+   # client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='appointments_as_client')
+    #date = models.DateField()
+    #time = models.TimeField()
+   # message = models.TextField(blank=True)
+    #confirmed = models.BooleanField(default=False)
+
+    #def __str__(self):
+        #return f"{self.client.username} → {self.therapist.username} on {self.date} at {self.time}"
+    
+    
+# core/models.py
+
+
+
+User = get_user_model()
+
+class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
+
+    client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client_appointments')
+    therapist = models.ForeignKey(User, on_delete=models.CASCADE, related_name='therapist_appointments')
+    date = models.DateField()
+    time = models.TimeField()
+    notes = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')  # ✅ Add this line
+
+    def __str__(self):
+        return f"{self.client} - {self.date} {self.time}"
+
+
+
+class Assessment(models.Model):
+    CATEGORY_CHOICES = [
+        ('anxiety', 'Anxiety'),
+        ('depression', 'Depression'),
+        ('stress', 'Stress'),
+    ]
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    score = models.IntegerField()
+    date_taken = models.DateTimeField(auto_now_add=True)
+
+    def feedback(self):
+        if self.score < 5:
+            return "Low"
+        elif 5 <= self.score < 10:
+            return "Moderate"
+        else:
+            return "High"
+
+    def __str__(self):
+        return f"{self.user.username} - {self.category} ({self.score})"
+
+
+
+class Resource(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    file = models.FileField(upload_to='resources/', blank=True, null=True)
+    link = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # ✅ Add this line — make it nullable and optional
+    uploaded_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True  # optional in forms too
+    )
+
+    def __str__(self):
+        return self.title
+    
+
+class Message(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+   
+
+
+
+class Appointment(models.Model):
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='appointments')
+    therapist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients')
+    date = models.DateField()
+    time = models.TimeField()
+    notes = models.TextField(blank=True)
+
+    #def __str__(self):
+      #  return f"{self.client.username} with {self.therapist.username} on {self.date}"
+
+
+

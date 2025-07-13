@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Admin Dashboard</h2>
+
+  <ul class="list-group">
+    <li class="list-group-item">Total Users: {{ total_users }}</li>
+    <li class="list-group-item">Total Appointments: {{ total_appointments }}</li>
+    <li class="list-group-item">Pending Appointments: {{ pending_appointments }}</li>
+    <li class="list-group-item">Total Assessments: {{ total_assessments }}</li>
+  </ul>
+
+  <h4 class="mt-5">Top Resources</h4>
+  <ul class="list-group">
+    {% for res in top_resources %}
+      <li class="list-group-item">{{ res.title }}</li>
+    {% empty %}
+      <li class="list-group-item">No resources yet.</li>
+    {% endfor %}
+  </ul>
+
+  <h4 class="mt-5">Site Analytics</h4>
+  <canvas id="analyticsChart" width="400" height="200"></canvas>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('analyticsChart').getContext('2d');
+  const analyticsChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: ['Users', 'Appointments', 'Assessments', 'Resources'],
+          datasets: [{
+              label: 'System Stats',
+              data: [
+                {{ total_users|default:0 }},
+                {{ total_appointments|default:0 }},
+                {{ total_assessments|default:0 }},
+                {{ top_resources|length|default:0 }}
+              ],
+              backgroundColor: [
+                  'rgba(75, 192, 192, 0.6)',
+                  'rgba(255, 159, 64, 0.6)',
+                  'rgba(153, 102, 255, 0.6)',
+                  'rgba(255, 205, 86, 0.6)'
+              ],
+              borderColor: '#333',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+</script>
+{% endblock %}

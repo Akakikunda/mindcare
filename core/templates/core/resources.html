@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Resources{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+<h2>Helpful Resources</h2>
+{% for resource in resources %}
+  <div class="resource-item">
+    <h4>{{ resource.title }}</h4>
+    <p>{{ resource.description }}</p>
+    <a href="{{ resource.file.url }}" download>Download</a>
+  </div>
+{% empty %}
+  <p>No resources available right now.</p>
+{% endfor %}
+
+{% endblock %}

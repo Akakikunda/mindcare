@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Assessment Results{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Your Assessment Result</h2>
+  <p><strong>Total Score:</strong> {{ score }}</p>
+  <p><strong>Feedback:</strong> {{ result }}</p>
+
+  <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Return to Home</a>
+</div>
+{% endblock %}

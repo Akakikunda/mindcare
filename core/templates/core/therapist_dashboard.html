@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Therapist Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Welcome, {{ user.first_name }}</h2>
+
+  <hr>
+
+  <h4>📅 Upcoming Appointments</h4>
+  <ul class="list-group mb-4">
+    {% for appointment in appointments %}
+      <li class="list-group-item">
+        {{ appointment.patient }} - {{ appointment.date }} at {{ appointment.time }}
+      </li>
+    {% empty %}
+      <li class="list-group-item text-muted">No upcoming appointments.</li>
+    {% endfor %}
+  </ul>
+
+  <h4>📩 Messages</h4>
+  <ul class="list-group mb-4">
+    {% for message in messages %}
+      <li class="list-group-item">
+        From: {{ message.sender }} - {{ message.content }}
+      </li>
+    {% empty %}
+      <li class="list-group-item text-muted">No messages yet.</li>
+    {% endfor %}
+  </ul>
+
+  <h4>📁 Uploaded Resources</h4>
+  <ul class="list-group">
+    {% for resource in resources %}
+      <li class="list-group-item">
+        {{ resource.title }} - <a href="{{ resource.file.url }}">Download</a>
+      </li>
+    {% empty %}
+      <li class="list-group-item text-muted">No resources uploaded yet.</li>
+    {% endfor %}
+  </ul>
+
+
+  {% for appointment in appointments %}
+<tr>
+  <td>{{ appointment.client.username }}</td>
+  <td>{{ appointment.date }}</td>
+  <td>{{ appointment.time }}</td>
+  <td>{{ appointment.status }}</td>
+  <td>
+    {% if appointment.status == 'pending' %}
+      <a href="{% url 'update_appointment_status' appointment.id 'approved' %}" class="btn btn-success btn-sm">Approve</a>
+      <a href="{% url 'update_appointment_status' appointment.id 'rejected' %}" class="btn btn-danger btn-sm">Reject</a>
+    {% endif %}
+  </td>
+</tr>
+{% endfor %}
+
+
+<a href="{% url 'send_message' %}" class="btn btn-primary">✉️ Send Message</a>
+<a href="{% url 'inbox' %}" class="btn btn-secondary">📥 View Inbox</a>
+
+  
+  <a href="{% url 'edit_profile' %}" class="btn btn-secondary mt-3">Edit Profile</a>
+
+</div>
+{% endblock %}
+

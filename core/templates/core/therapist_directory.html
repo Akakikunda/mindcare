@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Therapist Directory{% endblock %}
+{% block content %}
+<h2>Find a Therapist</h2>
+<form method="get" class="mb-3">
+  <input type="text" name="q" placeholder="Search by name, specialty, location" class="form-control">
+</form>
+
+<div class="row">
+  {% for t in therapists %}
+    <div class="col-md-4 mb-3">
+      <div class="card p-3">
+        <h4>{{ t.username }}</h4>
+        <p><strong>Specialty:</strong> {{ t.specialty }}</p>
+        <p><strong>Location:</strong> {{ t.location }}</p>
+        <p>{{ t.bio }}</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

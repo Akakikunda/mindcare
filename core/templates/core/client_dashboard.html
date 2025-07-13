@@ -1,0 +1,17 @@
+<h2>My Appointments</h2>
+<table class="table">
+  <thead><tr><th>Therapist</th><th>Date</th><th>Time</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for appointment in appointments %}
+    <tr>
+      <td>{{ appointment.therapist.username }}</td>
+      <td>{{ appointment.date }}</td>
+      <td>{{ appointment.time }}</td>
+      <td>{{ appointment.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <a href="{% url 'send_message' %}" class="btn btn-primary">✉️ Send Message</a>
+  <a href="{% url 'inbox' %}" class="btn btn-secondary">📥 View Inbox</a>
+
+</table>

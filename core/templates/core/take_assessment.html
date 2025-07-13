@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Take Assessment{% endblock %}
+{% block content %}
+<h2>Mental Health Assessment</h2>
+<h2>Anxiety Assessment</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
+
+
+

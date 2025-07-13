@@ -1,0 +1,49 @@
+<!--{% extends 'base.html' %}
+{% block title %}My Assessment Results{% endblock %}
+{% block content %}
+  <h2>My Assessment Results</h2>
+  {% if assessments %}
+    <table class="table table-bordered mt-3">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Score</th>
+          <th>Feedback</th>
+          <th>Date Taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in assessments %}
+          <tr>
+            <td>{{ a.get_category_display }}</td>
+            <td>{{ a.score }}</td>
+            <td>{{ a.feedback }}</td>
+            <td>{{ a.date_taken|date:"d M Y, H:i" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>You haven't completed any assessments yet.</p>
+  {% endif %}
+{% endblock %}-->
+
+
+{% extends 'base.html' %}
+
+{% block title %}My Assessments{% endblock %}
+
+{% block content %}
+  <h2>Assessment Results</h2>
+  {% if assessments %}
+    <ul class="list-group">
+      {% for a in assessments %}
+        <li class="list-group-item">
+          {{ a.title }} — Score: {{ a.score }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No assessments yet.</p>
+  {% endif %}
+{% endblock %}

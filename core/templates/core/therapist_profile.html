@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ therapist.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-header">
+      <h3>{{ therapist.name }}</h3>
+    </div>
+    <div class="card-body">
+      <p><strong>Specialty:</strong> {{ therapist.specialty }}</p>
+      <p><strong>Location:</strong> {{ therapist.location }}</p>
+      <p><strong>Bio:</strong> {{ therapist.bio }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
