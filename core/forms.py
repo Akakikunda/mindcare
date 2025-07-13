@@ -5,6 +5,8 @@ from .models import Assessment
 from .models import Message
 from django.contrib.auth import get_user_model
 from .models import Appointment, CustomUser
+from django import forms
+from .models import Resource
 
 
 
@@ -176,6 +178,13 @@ class TeenAssessmentForm(forms.Form):
         choices=[('1', 'Rarely'), ('2', 'Sometimes'), ('3', 'Often'), ('4', 'Always')],
         widget=forms.RadioSelect
     )
+
+
+
+class ResourceForm(forms.ModelForm):
+    class Meta:
+        model = Resource
+        fields = ['title', 'description', 'file', 'link']
 
 
 

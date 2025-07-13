@@ -6,7 +6,6 @@ from .forms import AppointmentForm
 from .models import Appointment
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Count
-from .models import Appointment, Assessment, Resource, CustomUser
 from .forms import ProfileForm
 from .models import Assessment
 from .forms import AssessmentForm
@@ -33,6 +32,20 @@ from .forms import CoupleAssessmentForm
 from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Appointment
+from django.contrib.auth.decorators import login_required, user_passes_test
+from core.models import Appointment, Assessment, Resource, CustomUser
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.db.models import Count
+from .models import Appointment, Assessment, Resource, CustomUser
+from .forms import ResourceForm  # Make sure you have this form
+from .models import Resource
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404, redirect
 
 
 
@@ -167,24 +180,37 @@ def view_resources(request):
     return render(request, 'core/resources.html', {'resources': resources})
 
 
-@user_passes_test(lambda u: u.is_superuser)
-def admin_dashboard(request):
-    total_users = CustomUser.objects.count()
-    total_appointments = Appointment.objects.count()
-    total_assessments = Assessment.objects.count()
-    top_resources = Resource.objects.annotate(downloads=Count('file')).order_by('-downloads')[:5]
-    pending_appointments = Appointment.objects.filter(status='pending').count()
 
+
+User = get_user_model()
+
+@staff_member_required
+def admin_dashboard(request):
+    users = CustomUser.objects.all()
+    appointments = Appointment.objects.all()
+    assessments = Assessment.objects.all()
+    resources = Resource.objects.all()
+    
+    total_users = users.count()
+    total_appointments = appointments.count()
+    pending_appointments = appointments.filter(status='pending').count()
+    total_assessments = assessments.count()
+    recent_resources = resources.order_by('-created_at')[:5]
 
     context = {
+        'users': users,
+        'appointments': appointments,
+        'assessments': assessments,
+        'resources': resources,
         'total_users': total_users,
         'total_appointments': total_appointments,
         'pending_appointments': pending_appointments,
-
         'total_assessments': total_assessments,
-        'top_resources': top_resources
+        'recent_resources': recent_resources,
     }
+
     return render(request, 'core/admin_dashboard.html', context)
+
 
 
 def book_appointment(request):
@@ -196,28 +222,6 @@ def book_appointment(request):
         [request.user.email],
         fail_silently=True,
     )
-
-@staff_member_required
-def admin_dashboard(request):
-    total_users = CustomUser.objects.count()
-    total_appointments = Appointment.objects.count()
-    pending_appointments = Appointment.objects.filter(status='pending').count()
-    total_assessments = Assessment.objects.count()
-    top_resources = Resource.objects.order_by('-created_at')[:5]
-
-    context = {
-        'total_users': total_users,
-        'total_appointments': total_appointments,
-        'pending_appointments': pending_appointments,
-        'total_assessments': total_assessments,
-        'top_resources': top_resources,
-    }
-    return render(request, 'core/admin_dashboard.html', context)
-
-
-
-
-
 
 @login_required
 def therapist_dashboard(request):
@@ -337,7 +341,6 @@ def therapist_profile_view(request, therapist_id):
 
 
 
-
 @login_required
 def book_appointment(request):
     if request.method == 'POST':
@@ -352,7 +355,6 @@ def book_appointment(request):
     else:
         form = AppointmentForm()
     return render(request, 'core/book_appointment.html', {'form': form})
-
 
 
 
@@ -403,7 +405,6 @@ def couple_assessment(request):
     return render(request, 'core/assessments/couple.html', {'form': form})
 
 
-  
 
 def family_assessment(request):
     if request.method == 'POST':
@@ -493,4 +494,98 @@ def dashboard(request):
 
 def assessment_view(request):
     return render(request, 'core/assessment.html')
+
+
+@login_required
+def redirect_user_by_role(request):
+    user = request.user
+
+    if user.is_superuser:
+        return redirect('admin_dashboard')  # You must have this URL name defined
+
+    elif user.role == 'therapist':
+        return redirect('therapist_dashboard')  # Must match your URL name
+
+    elif user.role == 'client':
+        return redirect('client_dashboard')  # Or use 'home' or a general page
+
+    else:
+        return redirect('home')  # Fallback just in case
+    
+    
+@login_required
+def role_redirect_view(request):
+    user = request.user
+    if user.is_superuser:
+        return redirect('admin_dashboard')
+    elif user.role == 'therapist':
+        return redirect('therapist_dashboard')
+    elif user.role == 'client':
+        return redirect('home')  # or wherever your client lands
+    else:
+        return redirect('home')
+
+
+@staff_member_required
+def edit_user(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User updated successfully.")
+            return redirect('admin_dashboard')
+    else:
+        form = CustomUserChangeForm(instance=user)
+
+    return render(request, 'core/edit_user.html', {'form': form, 'user': user})
+
+
+
+@staff_member_required
+def upload_resource(request):
+    if request.method == 'POST':
+        form = ResourceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Resource uploaded successfully.")
+            return redirect('admin_dashboard')
+    else:
+        form = ResourceForm()
+    return render(request, 'core/upload_resource.html', {'form': form})
+
+
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def upload_resource(request):
+    if request.method == 'POST':
+        form = ResourceForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+        form = ResourceForm()
+    return render(request, 'core/upload_resource.html', {'form': form})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def edit_resource(request, resource_id):
+    resource = get_object_or_404(Resource, id=resource_id)
+    if request.method == 'POST':
+        form = ResourceForm(request.POST, request.FILES, instance=resource)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_dashboard')
+    else:
+        form = ResourceForm(instance=resource)
+    return render(request, 'core/edit_resource.html', {'form': form})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_resource(request, resource_id):
+    resource = get_object_or_404(Resource, id=resource_id)
+    resource.delete()
+    return redirect('admin_dashboard')
+
 

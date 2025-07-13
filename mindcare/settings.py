@@ -114,12 +114,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.CustomUser'
 
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'login'
+
+#LOGIN_REDIRECT_URL = '/redirect/'
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'profile'
-LOGOUT_REDIRECT_URL = 'home'
-LOGIN_REDIRECT_URL = '/therapist/dashboard/'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_REDIRECT_URL = '/role-redirect/'  # <--- fixed route
+
+
 
 
 

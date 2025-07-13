@@ -1,63 +1,165 @@
 {% extends 'base.html' %}
 {% block title %}Admin Dashboard{% endblock %}
-
 {% block content %}
 <div class="container mt-4">
-  <h2 class="mb-4">Admin Dashboard</h2>
+  <h2 class="mb-4">🛠️ Admin Dashboard</h2>
 
-  <ul class="list-group">
-    <li class="list-group-item">Total Users: {{ total_users }}</li>
-    <li class="list-group-item">Total Appointments: {{ total_appointments }}</li>
-    <li class="list-group-item">Pending Appointments: {{ pending_appointments }}</li>
-    <li class="list-group-item">Total Assessments: {{ total_assessments }}</li>
-  </ul>
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-center bg-light shadow-sm">
+        <div class="card-body">
+          <h4>{{ total_users }}</h4>
+          <p>Total Users</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center bg-light shadow-sm">
+        <div class="card-body">
+          <h4>{{ total_appointments }}</h4>
+          <p>Total Appointments</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center bg-light shadow-sm">
+        <div class="card-body">
+          <h4>{{ total_assessments }}</h4>
+          <p>Total Assessments</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center bg-light shadow-sm">
+        <div class="card-body">
+          <h4>{{ resources.count }}</h4>
+          <p>Total Resources</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <h4 class="mt-5">Top Resources</h4>
-  <ul class="list-group">
-    {% for res in top_resources %}
-      <li class="list-group-item">{{ res.title }}</li>
-    {% empty %}
-      <li class="list-group-item">No resources yet.</li>
+  <!-- Users Table -->
+  <h4 class="mt-5">Users</h4>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role|default:"Admin" }}</td>
+          <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+          <td>
+            <a href="{% url 'edit_user' user.id %}">Edit</a> |
+            <a href="{% url 'delete_user' user.id %}">Delete</a>
+
+     
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Appointments Table -->
+  <h4 class="mt-5">Appointments</h4>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Client</th>
+          <th>Therapist</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appt in appointments %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ appt.client.username }}</td>
+          <td>{{ appt.therapist.username }}</td>
+          <td>{{ appt.date }}</td>
+          <td>{{ appt.time }}</td>
+          <td>{{ appt.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Assessments Table -->
+  <h4 class="mt-5">Assessments</h4>
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>User</th>
+          <th>Category</th>
+          <th>Score</th>
+          <th>Date Taken</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in assessments %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ a.user.username }}</td>
+          <td>{{ a.category }}</td>
+          <td>{{ a.score }}</td>
+          <td>{{ a.date_taken|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Resources Section -->
+  <h4 class="mt-5 d-flex justify-content-between">
+    <span>Resources</span>
+    <a href="{% url 'upload_resource' %}" class="btn btn-success btn-sm">Upload New</a>
+    <!-- Change this -->
+   <a href="{% url 'upload_resource' %}" class="btn btn-success btn-sm">Upload New</a>
+
+
+  </h4>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for res in resources %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ res.title }}</h5>
+          <p class="card-text">{{ res.description|truncatewords:20 }}</p>
+          {% if res.file %}
+          <a href="{{ res.file.url }}" class="btn btn-sm btn-outline-success">Download</a>
+          {% endif %}
+          {% if res.link %}
+          <a href="{{ res.link }}" target="_blank" class="btn btn-sm btn-outline-primary">Visit</a>
+          {% endif %}
+          <div class="mt-2">
+            <a href="{% url 'edit_resource' res.id %}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="{% url 'delete_resource' res.id %}" class="btn btn-sm btn-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endfor %}
-  </ul>
-
-  <h4 class="mt-5">Site Analytics</h4>
-  <canvas id="analyticsChart" width="400" height="200"></canvas>
+  </div>
 </div>
-
-<!-- Chart.js Script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const ctx = document.getElementById('analyticsChart').getContext('2d');
-  const analyticsChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: ['Users', 'Appointments', 'Assessments', 'Resources'],
-          datasets: [{
-              label: 'System Stats',
-              data: [
-                {{ total_users|default:0 }},
-                {{ total_appointments|default:0 }},
-                {{ total_assessments|default:0 }},
-                {{ top_resources|length|default:0 }}
-              ],
-              backgroundColor: [
-                  'rgba(75, 192, 192, 0.6)',
-                  'rgba(255, 159, 64, 0.6)',
-                  'rgba(153, 102, 255, 0.6)',
-                  'rgba(255, 205, 86, 0.6)'
-              ],
-              borderColor: '#333',
-              borderWidth: 1
-          }]
-      },
-      options: {
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
-      }
-  });
-</script>
 {% endblock %}

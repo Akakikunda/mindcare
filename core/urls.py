@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LoginView
-
+from .views import role_redirect_view
 from . import views
 from .views import (
     register_view, profile_view, home_view, book_appointment, appointment_success,
@@ -60,6 +60,33 @@ urlpatterns = [
     # Admin
     path('admin/users/', views.manage_users, name='manage_users'),
     path('admin/users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+
+
+    path('role-redirect/', role_redirect_view, name='role_redirect'),
+    
+   
+
+
+
+    path('admin/users/<int:user_id>/edit/', views.edit_user, name='edit_user'),
+    path('admin/users/<int:user_id>/delete/', views.delete_user, name='delete_user'),
+    path('admin/resources/upload/', views.upload_resource, name='upload_resource'),
+
+
+    #path('admin/resources/upload/', views.upload_resource, name='upload_resource'),
+   # path('admin/resources/<int:resource_id>/edit/', views.edit_resource, name='edit_resource'),
+    #path('admin/resources/<int:resource_id>/delete/', views.delete_resource, name='delete_resource'),
+    
+    path('dashboard/resources/upload/', views.upload_resource, name='upload_resource'),
+    path('dashboard/resources/<int:resource_id>/edit/', views.edit_resource, name='edit_resource'),
+    path('dashboard/resources/<int:resource_id>/delete/', views.delete_resource, name='delete_resource'),
+
+
+
+    path('redirect/', views.redirect_user_by_role, name='redirect_user'),
+
+
 
     # Password Reset
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='password_reset'),
