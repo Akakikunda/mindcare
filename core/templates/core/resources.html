@@ -1,18 +1,25 @@
 {% extends 'base.html' %}
-
 {% block title %}Resources{% endblock %}
-
 {% block content %}
-<div class="container mt-4">
-<h2>Helpful Resources</h2>
-{% for resource in resources %}
-  <div class="resource-item">
-    <h4>{{ resource.title }}</h4>
-    <p>{{ resource.description }}</p>
-    <a href="{{ resource.file.url }}" download>Download</a>
+<div class="container mt-5">
+  <h2 class="mb-4">Available Resources</h2>
+  <div class="row">
+    {% for res in resources %}
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5>{{ res.title }}</h5>
+          <p>{{ res.description|truncatewords:25 }}</p>
+          {% if res.file %}
+          <a href="{{ res.file.url }}" class="btn btn-sm btn-outline-success">Download</a>
+          {% endif %}
+          {% if res.link %}
+          <a href="{{ res.link }}" target="_blank" class="btn btn-sm btn-outline-primary">Visit</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
-{% empty %}
-  <p>No resources available right now.</p>
-{% endfor %}
-
+</div>
 {% endblock %}

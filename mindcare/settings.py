@@ -120,6 +120,7 @@ LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 LOGIN_REDIRECT_URL = '/role-redirect/'  # <--- fixed route
 
+LOGIN_REDIRECT_URL = '/dashboard/'  # redirects users here after login
 
 
 

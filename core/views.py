@@ -30,7 +30,6 @@ from .forms import FamilyAssessmentForm
 from .forms import TeenAssessmentForm
 from .forms import CoupleAssessmentForm
 from django.http import HttpResponse
-from django.contrib.auth.forms import AuthenticationForm
 from .models import Appointment
 from django.contrib.auth.decorators import login_required, user_passes_test
 from core.models import Appointment, Assessment, Resource, CustomUser
@@ -46,9 +45,82 @@ from .forms import ResourceForm  # Make sure you have this form
 from .models import Resource
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.shortcuts import render
+from .models import Appointment
+from .models import Appointment, Resource  # Update if your model names differ
+from django.contrib.auth.decorators import login_required
+from .models import Assessment  # Make sure Assessment model exists
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as django_logout
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect, render
+from django.contrib.auth.forms import AuthenticationForm
 
 
 
+
+
+
+@login_required
+def admin_dashboard(request):
+    return render(request, 'core/admin_dashboard.html')
+
+
+@login_required
+def notifications_view(request):
+    return render(request, 'core/notifications.html')
+
+@login_required
+def profile_view(request):
+    return render(request, 'core/profile.html')
+
+def logout_view(request):
+    django_logout(request)
+    return redirect('login')  # or use your landing page
+
+
+#def custom_login(request):
+    #if request.method == 'POST':
+        #user = authenticate(
+            #request,
+           # username=request.POST['username'],
+         #   password=request.POST['password']
+        #)
+     #   if user is not None:
+     #       login(request, user)
+    #        return redirect('home')  # or 'dashboard'
+   # return render(request, 'login.html')
+
+
+def custom_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+
+            # ✅ Redirect based on role
+            if user.is_superuser:
+                return redirect('admin_dashboard')
+            elif user.role == 'therapist':
+                return redirect('therapist_dashboard')
+            elif user.role == 'client':
+                return redirect('dashboard')  # or 'client_dashboard'
+            else:
+                return redirect('home')  # fallback
+    else:
+        form = AuthenticationForm()
+
+    return render(request, 'registration/login.html', {'form': form})
+
+
+
+
+def landing_page(request):
+    return render(request, 'core/landing.html')
 
 
 def register_view(request):
@@ -61,6 +133,54 @@ def register_view(request):
     else:
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+
+def projects_view(request):
+    return render(request, 'core/projects.html')
+
+
+
+
+def resources_view(request):
+    resources = Resource.objects.all()
+    return render(request, 'core/resources.html', {'resources': resources})
+
+
+
+def assessments_view(request):
+    assessments = Assessment.objects.all()
+    return render(request, 'core/assessments.html', {'assessments': assessments})
+
+
+
+
+
+@login_required
+def home_view(request):
+    appointments = Appointment.objects.filter(client=request.user)
+    resources = Resource.objects.all()[:3]  # Just show latest 3
+    projects = Project.objects.all()[:3]
+    
+    return render(request, 'core/home.html', {
+        'appointments': appointments,
+        'resources': resources,
+        'projects': projects,
+    })
+
+
+
+def home_view(request):
+    projects = Project.objects.all()
+    resources = Resource.objects.all()
+    appointments = Appointment.objects.filter(user=request.user) if request.user.is_authenticated else []
+
+    context = {
+        'projects': projects,
+        'resources': resources,
+        'appointments': appointments,
+    }
+    return render(request, 'core/home.html', context)
 
 
 @login_required
@@ -513,17 +633,40 @@ def redirect_user_by_role(request):
         return redirect('home')  # Fallback just in case
     
     
+#@login_required
+#def role_redirect_view(request):
+    #user = request.user
+   # if user.is_superuser:
+     #   return redirect('admin_dashboard')
+    #elif user.role == 'therapist':
+    #    return redirect('therapist_dashboard')
+   # elif user.role == 'client':
+  #      return redirect('home')  # or wherever your client lands
+ #   else:
+#       return redirect('home')
+    
+    from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+
 @login_required
 def role_redirect_view(request):
     user = request.user
+
+    # ✅ Check for superuser/admin
     if user.is_superuser:
         return redirect('admin_dashboard')
-    elif user.role == 'therapist':
+
+    # ✅ Check for therapist
+    elif hasattr(user, 'role') and user.role == 'therapist':
         return redirect('therapist_dashboard')
-    elif user.role == 'client':
-        return redirect('home')  # or wherever your client lands
-    else:
-        return redirect('home')
+
+    # ✅ Check for client
+    elif hasattr(user, 'role') and user.role == 'client':
+        return redirect('dashboard')  # or 'client_dashboard'
+
+    # 🔁 Default fallback
+    return redirect('home')
+
 
 
 @staff_member_required
@@ -589,3 +732,8 @@ def delete_resource(request, resource_id):
     return redirect('admin_dashboard')
 
 
+
+
+def appointments_view(request):
+    appointments = Appointment.objects.all()
+    return render(request, 'core/appointments.html', {'appointments': appointments})

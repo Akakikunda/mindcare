@@ -1,19 +1,12 @@
-
-
 {% extends 'base.html' %}
-
-{% block title %}My Profile{% endblock %}
-
+{% block title %}Profile{% endblock %}
 {% block content %}
-  <div class="card">
-    <div class="card-header">
-      <h4>Profile</h4>
-    </div>
-    <div class="card-body">
-      <p><strong>Username:</strong> {{ user.username }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Role:</strong> {{ user.role }}</p>
-    </div>
-  </div>
+<div class="container mt-4">
+  <h3>My Profile</h3>
+  <ul class="list-group">
+    <li class="list-group-item"><strong>Username:</strong> {{ request.user.username }}</li>
+    <li class="list-group-item"><strong>Email:</strong> {{ request.user.email }}</li>
+    <li class="list-group-item"><strong>Role:</strong> {{ request.user.role|default:"User" }}</li>
+  </ul>
+</div>
 {% endblock %}
-

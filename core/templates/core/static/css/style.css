@@ -1,5 +1,5 @@
-body {
-    background-color: #f8f9fa;
+.body {
+    background-color: lightblue
 }
 
 .card {
@@ -7,6 +7,6 @@ body {
 }
 
 .btn-dark {
-    background-color: #1d3b3a;
+    background-color: #7cc8d7;
     border: none;
 }

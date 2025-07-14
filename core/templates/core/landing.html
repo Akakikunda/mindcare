@@ -1,0 +1,142 @@
+<!-- templates/core/landing.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}MindCare | Home{% endblock %}
+
+{% block content %}
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-primary" href="#">
+      <img src="{% static 'images/logo.png' %}" alt="MindCare" height="40">
+      MindCare
+    </a>
+     
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'landing' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'assessment' %}">Assessment</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'notifications' %}">Notifications</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+        </li>
+      </ul>
+       <div class="container mt-5">
+    <h1>Welcome to MindCare</h1>
+    {% if not user.is_authenticated %}
+      <p class="lead">Mental wellness starts here.</p>
+      <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+      <a href="{% url 'register' %}" class="btn btn-outline-primary">Register</a>
+    {% endif %}
+  </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Banner -->
+<header class="bg-primary text-white text-center py-5" style="background-image: url('{% static 'images/banner.jpg' %}'); background-size: cover; background-position: center;">
+  <div class="container">
+    <h1 class="display-4 fw-bold">Better Advice for Mental Health</h1>
+    <p class="lead">Mental Health is a major concern nowadays...</p>
+    <a href="{% url 'appointments' %}" class="btn btn-light btn-lg mt-3">Book Appointment</a>
+  </div>
+</header>
+
+<!-- Services Section -->
+<section class="container text-center my-5">
+  <h2 class="mb-4">What We Do</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <img src="{% static 'images/visit.jpg' %}" class="img-fluid mb-3" alt="Visit">
+      <h5>Onsite Visits</h5>
+      <p>Get in-person counseling support from professionals.</p>
+    </div>
+    <div class="col-md-4">
+      <img src="{% static 'images/legal.jpg' %}" class="img-fluid mb-3" alt="Legal">
+      <h5>Legal Advice</h5>
+      <p>We protect rights of persons with psychosocial disabilities.</p>
+    </div>
+    <div class="col-md-4">
+      <img src="{% static 'images/rehab.jpg' %}" class="img-fluid mb-3" alt="Rehab">
+      <h5>Rehabilitation</h5>
+      <p>We help you reintegrate into society with dignity.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Therapists Section -->
+<section class="bg-light py-5">
+  <div class="container text-center">
+    <h2 class="mb-4">Meet Our Therapists</h2>
+    <div class="row">
+      <div class="col-md-3">
+        <img src="{% static 'images/therapist1.jpg' %}" class="rounded-circle mb-2" height="120">
+        <h6>Therapist 1</h6>
+      </div>
+      <div class="col-md-3">
+        <img src="{% static 'images/therapist2.jpg' %}" class="rounded-circle mb-2" height="120">
+        <h6>Therapist 2</h6>
+      </div>
+      <div class="col-md-3">
+        <img src="{% static 'images/therapist3.jpg' %}" class="rounded-circle mb-2" height="120">
+        <h6>Therapist 3</h6>
+      </div>
+      <div class="col-md-3">
+        <img src="{% static 'images/therapist4.jpg' %}" class="rounded-circle mb-2" height="120">
+        <h6>Therapist 4</h6>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Message from Admin -->
+<section class="container my-5 text-center">
+  <h2>Message from Admin</h2>
+  <p class="lead">“There is hope even when your brain tells you there isn’t.”</p>
+  <footer class="blockquote-footer">Derrick Kizza Mbaga, Executive Director</footer>
+</section>
+
+<!-- Testimonials -->
+<section class="bg-light py-5">
+  <div class="container text-center">
+    <h2>Patient Testimonials</h2>
+    <blockquote class="blockquote">
+      <p>“MindCare has shown me so much care, patience and support.”</p>
+      <footer class="blockquote-footer">James Mukisa</footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- Contact & Map -->
+<section class="container my-5">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Contact Us</h4>
+      <p>Email: support@mindcare.ug</p>
+      <p>Phone: +256 702 123456</p>
+      <p>Location: Kampala, Uganda</p>
+    </div>
+    <div class="col-md-6">
+      <iframe src="https://www.google.com/maps?q=Kampala&output=embed" width="100%" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+    </div>
+  </div>
+</section>
+<!-- Floating Help Button -->
+<a href="{% url 'appointments' %}" 
+   class="btn btn-primary rounded-pill shadow-lg" 
+   style="position: fixed; bottom: 20px; right: 20px; z-index: 999;">
+   Need Help?
+</a>
+
+{% endblock %}

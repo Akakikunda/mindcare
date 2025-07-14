@@ -1,111 +1,92 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>{% block title %}MindCare{% endblock %}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-  
-  <style>
-    body {
-      background: linear-gradient(to right, #e0f7fa, #fce4ec); /* soft blue & pink */
-      min-height: 100vh;
-      background-attachment: fixed;
-      background-size: cover;
-    }
+    <meta charset="UTF-8">
+    <title>{% block title %}MindCare{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    .content-wrapper {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 40px;
-    }
+    <style> 
+  .navbar-brand img {
+    margin-right: 8px;
+  }
+  .navbar-nav .nav-link:hover {
+    color: #0d6efd;
+  }
+</style>
 
-    .alert {
-      margin-top: 10px;
-    }
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Your custom CSS -->
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-    .navbar-brand {
-      font-weight: bold;
-    }
-  </style>
+
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}">🧠 MindCare</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-            aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" href="#">
+      <img src="{% static 'images/logo.png' %}" height="40" alt="MindCare Logo">
+      MindCare
+    </a>
+    <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url 'home' %}">MindCare</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ml-auto">
+      {% if user.is_authenticated %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Profile</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+      {% else %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-
-        {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
-          </li>
-
-          {% if user.role == 'therapist' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'therapist_dashboard' %}">Dashboard</a>
-            </li>
-          {% elif user.role == 'client' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'book_appointment' %}">Book Appointment</a>
-            </li>
-          {% elif user.role == 'patient' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'patient_profile' %}">My Profile</a>
-            </li>
-          {% endif %}
-
-          {% if user.is_superuser %}
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/">Admin Panel</a>
-            </li>
-          {% endif %}
-
-          <li class="nav-item">
-            <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
-          </li>
-
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'login' %}">Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
-          </li>
-        {% endif %}
-
+        <li class="nav-item"><a href="{% url 'appointments' %}" class="nav-link">Appointments</a></li>
+        <li class="nav-item"><a href="{% url 'resources' %}" class="nav-link">Resources</a></li>
+        <li class="nav-item"><a href="{% url 'assessments' %}" class="nav-link">Assessments</a></li>
+        <li class="nav-item"><a href="{% url 'notifications' %}" class="nav-link">Notifications</a></li>
+        <li class="nav-item"><a href="{% url 'profile' %}" class="nav-link">Profile</a></li>
+        <li class="nav-item"><a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm ms-2">Logout</a></li>
       </ul>
     </div>
   </div>
 </nav>
-<!-- End Navbar -->
 
-<!-- Page Content -->
-<div class="container content-wrapper">
-  {% block content %}
-  {% endblock %}
-</div>
+<!-- Content -->
+<main>
+  {% block content %}{% endblock %}
+</main>
 
-<!-- Flash Messages -->
-{% if messages %}
-  <div class="container">
-    {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-  </div>
-{% endif %}
+<!-- Floating Button -->
+<a href="#" class="btn btn-success btn-lg rounded-circle shadow position-fixed" style="bottom: 30px; right: 30px;">
+  ?
+</a>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+<a href="mailto:support@mindcare.ug" class="btn btn-danger position-fixed" style="bottom: 30px; right: 30px; z-index: 999;">
+  Need Help?
+</a>
+
+
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'admin_dashboard' %}">Dashboard</a>
+  <a href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+
+</li>
+
 </body>
 </html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Assessments{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Assessments</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>User</th>
+        <th>Category</th>
+        <th>Score</th>
+        <th>Date Taken</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in assessments %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ a.user.username }}</td>
+        <td>{{ a.category }}</td>
+        <td>{{ a.score }}</td>
+        <td>{{ a.date_taken|date:"Y-m-d H:i" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
